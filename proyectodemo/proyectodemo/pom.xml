@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.masanz</groupId>
-	<artifactId>proyectodemo</artifactId>
+	<artifactId>proyectoDWEB</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
