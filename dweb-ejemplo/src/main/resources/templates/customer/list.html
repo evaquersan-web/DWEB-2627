@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Happy Pack</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all" href="../static/css/gtvg.css" th:href="@{/css/gtvg.css}" />
+    <link rel="icon" type="image/x-icon" href="/images/happyPackLogo.ico"/>
+</head>
+
+  <body>
+
+  <header class="site-header">
+      <div class="site-header__inner">
+          <a class="brand" href="home.html" th:href="@{/}">
+              <img src="../static/images/happyPackLogo.png" alt="Happy Pack" th:src="@{/images/happyPackLogo.png}" />
+              <span class="brand__text">
+            <span class="brand__name">Happy Pack</span>
+            <span class="brand__tagline">Regalos útiles para cada ocasión</span>
+          </span>
+          </a>
+          <nav class="main-nav" aria-label="Navegación principal">
+              <a href="product/list.html" th:href="@{/product/list}">Productos</a>
+          </nav>
+      </div>
+  </header>
+
+    <main class="page">
+      <div class="page-header">
+        <p class="eyebrow">Cuentas</p>
+        <h1>Clientes</h1>
+        <p class="lead">Listado de clientes registrados en la tienda.</p>
+      </div>
+
+
+      <section class="data-grid" aria-label="Lista de clientes">
+        <div class="grid-row grid-row--head customer-grid">
+          <span>Nombre</span>
+          <span>Email</span>
+          <span>Cliente desde</span>
+          <span>Acciones</span>
+        </div>
+
+        <article class="grid-row customer-grid" th:each="customer : ${customers}">
+          <strong>Cliente</strong>
+          <a>cliente@example.com</a>
+          <span>13 ene 2011</span>
+          <span>
+            
+          </span>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <span>&copy; 2026 Happy Pack</span>
+        </div>
+    </footer>
+
+  </body>
+
+</html>
