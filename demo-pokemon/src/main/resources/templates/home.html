@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Pokemons</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}"/>
+</head>
+<body>
+    <main class="page">
+        <section class="pokemon-grid">
+            <h1>Pokemons</h1>
+            <div class="cards">
+                <div class="card" th:each="pokemon : ${pokemons}">
+                    <div class="card-image">
+                        <img th:src="${pokemon.imageURL}" th:alt="${pokemon.name}" />
+                    </div>
+                    <div class="card-body">
+                        <h2 th:text="${pokemon.name}">Nombre</h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
