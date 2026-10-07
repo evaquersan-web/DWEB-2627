@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- saved from url=(0085)https://moodle.mariaanasanz.es/pluginfile.php/46722/mod_assign/intro/informacion.html -->
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:cth="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Información de la Pokédex</title>
+  <style>
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;color:#172033;background:#fff7ed;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}.page{width:min(960px,calc(100% - 32px));margin:0 auto;padding:32px 0 48px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.back-link{color:#991b1b;font-weight:700;text-decoration:none}.updated{color:#64748b;font-size:.9rem}.intro{padding:28px;color:#fff;background:linear-gradient(135deg,#991b1b,#dc2626);border-radius:22px;box-shadow:0 16px 35px rgba(153,27,27,.2)}.intro h1{margin:0 0 10px;font-size:clamp(2rem,6vw,3.4rem);line-height:1.05}.intro p{max-width:700px;margin:0;color:#fff7ed;font-size:1.05rem}.featured{display:grid;grid-template-columns:minmax(240px,.8fr) minmax(280px,1.2fr);gap:24px;margin-top:24px}.image-panel,.data-panel{background:#fff;border:1px solid #e2e8f0;border-radius:22px;box-shadow:0 12px 28px rgba(15,23,42,.08)}.image-panel{display:grid;place-items:center;padding:28px;background:#fef2f2}.image-panel img{width:min(100%,280px);image-rendering:pixelated}.data-panel{padding:28px}.number{margin:0 0 5px;color:#64748b;font-weight:800;letter-spacing:.12em}.pokemon-name{margin:0 0 8px;color:#991b1b;font-size:2.4rem}.message{margin:0 0 22px;color:#475569}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{padding:15px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px}.stat-label{display:block;margin-bottom:4px;color:#64748b;font-size:.8rem;font-weight:800;text-transform:uppercase}.stat-value{font-size:1.2rem;font-weight:800}.footer-message{margin:24px 0 0;padding:18px;background:#fffbeb;border-left:5px solid #f59e0b;border-radius:8px;color:#92400e}@media(max-width:700px){.topbar{align-items:flex-start;flex-direction:column}.featured{grid-template-columns:1fr}.stats{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="topbar">
+    <a class="back-link" th:href="@{/}">← Volver a la Pokédex</a>
+    <span th:text = "'Actualizado el '+ ${#temporals.format(fechaActual,'dd/MM/yyyy')}"></span>
+  </header>
+  <section class="intro">
+    <h1 th:text="${titulo}">Pokémon destacado</h1>
+    <p th:text="${presentacion}">Conoce los datos principales de uno de los Pokémon disponibles en nuestra Pokédex.</p>
+  </section>
+  <section class="featured">
+    <div class="image-panel"><img th:src="${pokemon.imageURL}" th:alt="${pokemon.name}"></div>
+    <article class="data-panel">
+      <p th:text="'N.º ' + ${#numbers.formatInteger(pokemon.id, 4)}"></p>
+      <h2 th:text="${#strings.capitalize(pokemon.name)}"></h2>
+      <p th:text="'Hoy te presentamos a ' + ${#strings.capitalize(pokemon.name)} + ' nuestro Pokémon destacado.'"></p>
+      <div class="stats">
+        <div class="stat"><span class="stat-label">Altura</span><span th:text="${#numbers.formatDecimal(pokemon.height / 10.0, 1, 1)} + ' m'"></span></div>
+        <div class="stat"><span class="stat-label">Peso</span><span th:text="${#numbers.formatDecimal(pokemon.weight / 10.0, 1, 1)} + ' kg'"></span></div>
+        <div class="stat"><span class="stat-label">Experiencia base</span><span th:text="${pokemon.baseExperience} + ' puntos'"></span></div>
+      </div>
+      <p th:text="${#strings.capitalize(pokemon.name)} + ' ocupa el número ' + ${#numbers.formatInteger(pokemon.id, 4)} + ' de la Pokédex.'"></p>
+    </article>
+  </section>
+</main>
+
+
+</body></html>

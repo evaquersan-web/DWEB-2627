@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Controller
@@ -22,5 +23,15 @@ public class PokemonController {
 
         return "home";
     }
+    @GetMapping("/informacion")
+    public String informacion(Model model) {
+        Pokemon pokemon = pokemonService.findRandom();
 
+        model.addAttribute("titulo", "Pokémon del Día");
+        model.addAttribute("presentacion", "Aquí tienes algunos de los pokemon selecionados de la pokedex");
+        model.addAttribute("fechaActual", LocalDateTime.now());
+        model.addAttribute("pokemon", pokemon);
+
+        return "informacion";
+    }
 }
