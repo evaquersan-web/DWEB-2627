@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xml:th="http://www.thymelef.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listado de Pokémon</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#eef6ff;color:#172033;font-family:"Segoe UI",Arial,sans-serif}.page{width:min(1100px,calc(100% - 32px));margin:auto;padding:32px 0 48px}.topbar{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:24px}.nav{display:flex;gap:10px;flex-wrap:wrap}.nav a{padding:9px 14px;border-radius:8px;background:#0f4c81;color:#fff;text-decoration:none;font-weight:700}.updated{color:#64748b;font-size:.9rem}.hero{padding:26px;background:linear-gradient(135deg,#002855,#0369a1);border-radius:18px;color:#fff;margin-bottom:22px}.hero h1{margin:0 0 8px}.hero p{margin:0;color:#dbeafe}.table-card{overflow-x:auto;background:#fff;border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 12px 28px rgba(15,23,42,.08)}table{width:100%;border-collapse:collapse;min-width:760px}th,td{padding:14px 16px;text-align:left;border-bottom:1px solid #e2e8f0}th{background:#dbeafe;color:#0c4a6e;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}tbody tr:last-child td{border-bottom:0}.position{font-weight:800;color:#0284c7}.pokemon-name{font-weight:800;color:#002855}@media(max-width:700px){.topbar{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="topbar">
+    <nav class="nav">
+		<a th:href="@{/}">Inicio</a>
+		<a th:href="@{/pokemon/galeria}">Galería</a>
+	</nav>
+    <span class="updated" th:text="${'actualizado el '
+    + #temporals.format(fechaHora, 'dd/MM/yyyy') +
+     ' a las ' + #temporals.format(fechaHora, 'HH:mm')}"></span>
+  </header>
+  <section class="hero">
+	<h1 th:text="${titulo}">Pokémon en formato tabla</h1>
+	<p>Compara rápidamente sus medidas y experiencia base.</p>
+</section>
+  <section class="table-card">
+    <table>
+      <thead><tr>
+		<th>Posición</th>
+		<th>N.º Pokédex</th>
+		<th>Nombre</th>
+		<th>Altura</th>
+		<th>Peso</th>
+		<th>Experiencia</th>
+	  </tr></thead>
+      <tbody>
+	  <tr th:each="pokemon, iterStat : ${pokemons}">
+		  <td class="position" th:text="${iterStat.count}">1</td>
+		  <td th:text="${#numbers.formatInteger(pokemon.id, 4)}">
+			  0001
+		  </td>
+		  <td class="pokemon-name"
+			  th:text="${#strings.capitalize(pokemon.name)}">
+			  Bulbasaur
+		  </td>
+		  <td th:text="${#numbers.formatDecimal(pokemon.height / 10.0, 1, 1)} + ' m'">
+			  0,7 m
+		  </td>
+		  <td th:text="${#numbers.formatDecimal(pokemon.weight / 10.0, 1, 1)} + ' kg'">
+			  6,9 kg
+		  </td>
+		  <td th:text="${pokemon.baseExperience} + ' puntos'">
+			  64 puntos
+		  </td>
+	  </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+</body>
+</html>

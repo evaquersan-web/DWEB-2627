@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galería Pokémon</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#fff7ed;color:#292524;font-family:"Segoe UI",Arial,sans-serif}.page{width:min(1120px,calc(100% - 32px));margin:auto;padding:32px 0 50px}.nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}.nav a{padding:9px 14px;border-radius:999px;background:#9a3412;color:#fff;text-decoration:none;font-weight:700}.hero{text-align:center;margin-bottom:28px}.hero h1{margin:0;color:#9a3412;font-size:clamp(2rem,5vw,3.3rem)}.hero p{color:#78716c}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}.card{overflow:hidden;background:#fff;border:1px solid #fed7aa;border-radius:22px;box-shadow:0 12px 26px rgba(124,45,18,.1)}.card-image{display:grid;place-items:center;min-height:210px;padding:18px;background:linear-gradient(145deg,#ffedd5,#fef3c7)}.card-image img{width:180px;max-width:100%;image-rendering:pixelated}.card-body{padding:20px}.number{margin:0;color:#9a3412;font-weight:900;letter-spacing:.1em}.card h2{margin:4px 0 14px;font-size:1.6rem}.measures{display:flex;gap:10px}.measure{flex:1;padding:10px;border-radius:10px;background:#fff7ed}.label{display:block;color:#a8a29e;font-size:.72rem;font-weight:800;text-transform:uppercase}.value{font-weight:800}
+  </style>
+</head>
+<body>
+<main class="page">
+  <nav class="nav">
+	<a th:href="@{/}">Inicio</a>
+	<a th:href="@{/pokemon/tabla}">Listado</a>
+  </nav>
+  <header class="hero">
+	<h1 th:text="${titulo}">Galería Pokémon</h1>
+	<p>Descubre una selección aleatoria de Pokémon.</p>
+  </header>
+  <section class="cards">
+    <article class="card" th:each="pokemon : ${pokemons}">
+		<div class="card-image">
+       <img th:src="${pokemon.imageURL}" th:alt="${#strings.capitalize(pokemon.name)}"
+     src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
+            alt="Bulbasaur"></div>
+		<div class="card-body">
+			<p class="number" th:text="'N.º '+ ${#numbers.formatInteger(pokemon.id,4)}">N.º 0001</p>
+			<h2 th:text="${#strings.capitalize(pokemon.name)}">Bulbasaur</h2>
+			<div class="measures">
+				<div class="measure"><span class="label">Altura</span>
+                    <span class="value" th:text="${#numbers.formatDecimal(pokemon.height / 10.0, 1, 1)} + ' m'">
+                        0,7 m</span></div>
+				<div class="measure"><span class="label">Peso</span><span class="value"
+                th:text="${#numbers.formatDecimal(pokemon.weight / 10.0, 1, 1)} + ' kg'">
+                    6,9 kg</span></div>
+			</div>
+		</div>
+	</article>
+    </section>
+</main>
+</body>
+</html>
