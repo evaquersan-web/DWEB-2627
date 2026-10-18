@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalla Pokémon</title>
+
+    <style>
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          background: #f8fafc;
+          color: #172033;
+          font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .page {
+          width: min(1100px, calc(100% - 32px));
+          margin: auto;
+          padding: 32px 0 50px;
+        }
+
+        .nav {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-bottom: 24px;
+        }
+
+        .nav a {
+          padding: 9px 14px;
+          border-radius: 8px;
+          background: #0f4c81;
+          color: #fff;
+          text-decoration: none;
+          font-weight: 700;
+        }
+
+        .hero {
+          text-align: center;
+          margin-bottom: 30px;
+        }
+
+        .hero h1 {
+          margin: 0;
+          color: #002855;
+          font-size: clamp(2rem, 5vw, 3.2rem);
+        }
+
+        .hero p {
+          margin: 8px 0 0;
+          color: #64748b;
+        }
+
+        .battle {
+          display: grid;
+          grid-template-columns: 1fr 90px 1fr;
+          gap: 20px;
+          align-items: center;
+          margin-bottom: 30px;
+        }
+
+        .pokemon {
+          background: #fff;
+          border: 1px solid #cbd5e1;
+          border-radius: 22px;
+          overflow: hidden;
+          box-shadow: 0 12px 28px rgba(15, 23, 42, .09);
+        }
+
+        .pokemon-image {
+          display: grid;
+          place-items: center;
+          min-height: 260px;
+          padding: 20px;
+        }
+
+        .pokemon:first-child .pokemon-image {
+          background: linear-gradient(145deg, #dbeafe, #eff6ff);
+        }
+
+        .pokemon:last-child .pokemon-image {
+          background: linear-gradient(145deg, #fee2e2, #fff1f2);
+        }
+
+        .pokemon-image img {
+          width: 220px;
+          max-width: 100%;
+          image-rendering: pixelated;
+        }
+
+        .pokemon-body {
+          padding: 22px;
+          text-align: center;
+        }
+
+        .pokemon-number {
+          margin: 0;
+          color: #64748b;
+          font-size: .85rem;
+          font-weight: 900;
+          letter-spacing: .1em;
+        }
+
+        .pokemon h2 {
+          margin: 5px 0 20px;
+          color: #002855;
+          font-size: 1.8rem;
+        }
+
+        .stats {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+        }
+
+        .stat {
+          padding: 12px 8px;
+          border-radius: 10px;
+          background: #f8fafc;
+        }
+
+        .stat-label {
+          display: block;
+          color: #64748b;
+          font-size: .7rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          margin-bottom: 4px;
+        }
+
+        .stat-value {
+          font-weight: 800;
+          color: #172033;
+        }
+
+        .versus {
+          display: grid;
+          place-items: center;
+          width: 80px;
+          height: 80px;
+          margin: auto;
+          border-radius: 50%;
+          background: #002855;
+          color: #fff;
+          font-size: 1.7rem;
+          font-weight: 900;
+          box-shadow: 0 8px 20px rgba(0, 40, 85, .25);
+        }
+
+        .section-title {
+          margin: 0 0 18px;
+          color: #002855;
+          font-size: 1.5rem;
+        }
+
+        .comparisons {
+          background: #fff;
+          border: 1px solid #cbd5e1;
+          border-radius: 18px;
+          padding: 24px;
+          margin-bottom: 24px;
+          box-shadow: 0 8px 20px rgba(15, 23, 42, .06);
+        }
+
+        .comparison-list {
+          display: grid;
+          gap: 12px;
+        }
+
+        .comparison {
+          display: grid;
+          grid-template-columns: 160px 1fr;
+          align-items: center;
+          gap: 15px;
+          padding: 14px 16px;
+          background: #f8fafc;
+          border-radius: 10px;
+        }
+
+        .comparison-label {
+          font-weight: 800;
+          color: #475569;
+        }
+
+        .comparison-result {
+          font-weight: 800;
+          color: #0369a1;
+        }
+
+        .calculations {
+          background: #fff;
+          border: 1px solid #cbd5e1;
+          border-radius: 18px;
+          padding: 24px;
+          margin-bottom: 24px;
+          box-shadow: 0 8px 20px rgba(15, 23, 42, .06);
+        }
+
+        .calculation-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 14px;
+        }
+
+        .calculation {
+          padding: 16px;
+          border-radius: 12px;
+          background: #f1f5f9;
+        }
+
+        .calculation-label {
+          display: block;
+          margin-bottom: 5px;
+          color: #64748b;
+          font-size: .8rem;
+          font-weight: 800;
+          text-transform: uppercase;
+        }
+
+        .calculation-value {
+          color: #002855;
+          font-size: 1.2rem;
+          font-weight: 900;
+        }
+
+        .scores {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+          margin-top: 14px;
+        }
+
+        .score {
+          padding: 18px;
+          border-radius: 12px;
+          text-align: center;
+          background: #e0f2fe;
+        }
+
+        .score:last-child {
+          background: #fee2e2;
+        }
+
+        .score-name {
+          display: block;
+          margin-bottom: 4px;
+          color: #475569;
+          font-weight: 700;
+        }
+
+        .score-value {
+          color: #002855;
+          font-size: 1.6rem;
+          font-weight: 900;
+        }
+
+        .winner {
+          padding: 28px;
+          border-radius: 18px;
+          text-align: center;
+          background: linear-gradient(135deg, #002855, #0369a1);
+          color: #fff;
+          margin-bottom: 24px;
+        }
+
+        .winner-label {
+          margin: 0 0 5px;
+          color: #bae6fd;
+          font-size: .8rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: .1em;
+        }
+
+        .winner h2 {
+          margin: 0 0 18px;
+          font-size: clamp(1.5rem, 4vw, 2.3rem);
+        }
+
+        .new-battle {
+          display: inline-block;
+          padding: 10px 18px;
+          border-radius: 8px;
+          background: #fff;
+          color: #002855;
+          text-decoration: none;
+          font-weight: 800;
+        }
+
+        .footer {
+          margin-top: 30px;
+          padding: 18px;
+          border-top: 1px solid #cbd5e1;
+          color: #64748b;
+          text-align: center;
+          font-size: .9rem;
+        }
+
+        @media (max-width: 800px) {
+          .battle {
+            grid-template-columns: 1fr;
+          }
+
+          .versus {
+            width: 65px;
+            height: 65px;
+            font-size: 1.4rem;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .stats {
+            grid-template-columns: 1fr;
+          }
+
+          .comparison {
+            grid-template-columns: 1fr;
+            gap: 5px;
+          }
+
+          .calculation-grid,
+          .scores {
+            grid-template-columns: 1fr;
+          }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="page">
+
+    <div th:replace="~{fragments :: menu}"></div>
+
+
+    <header class="hero">
+        <h1>Batalla Pokémon</h1>
+        <p>Dos Pokémon frente a frente. ¿Quién será el vencedor?</p>
+    </header>
+
+
+    <section class="battle">
+
+        <!-- POKÉMON 1 -->
+        <article class="pokemon">
+            <div class="pokemon-image">
+                <img th:src="${pokemon1.imageURL}" th:alt="${pokemon1.name}">
+            </div>
+
+            <div class="pokemon-body">
+                <p class="pokemon-number">
+                    N.º <span th:text="${#numbers.formatInteger(pokemon1.id, 4)}">0001</span>
+                </p>
+                <h2 th:text="${pokemon1.name}">Pokémon 1</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">Altura</span>
+                        <span class="stat-value"
+                              th:text="${#numbers.formatDecimal(pokemon1.height / 10.0, 1, 1) + ' m'}">0,0 m</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Peso</span>
+                        <span class="stat-value"
+                              th:text="${#numbers.formatDecimal(pokemon1.weight / 10.0, 1, 1) + ' kg'}">0,0 kg</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Experiencia</span>
+                        <span class="stat-value" th:text="${pokemon1.baseExperience}">0</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+
+        <div class="versus">VS</div>
+
+
+        <!-- POKÉMON 2 -->
+        <article class="pokemon">
+            <div class="pokemon-image">
+                <img th:src="${pokemon2.imageURL}" th:alt="${pokemon2.name}">
+            </div>
+            <div class="pokemon-body">
+                <p class="pokemon-number">
+                    N.º <span th:text="${#numbers.formatInteger(pokemon2.id, 4)}">0002</span>
+                </p>
+                <h2 th:text="${pokemon2.name}">Pokémon 2</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">Altura</span>
+                        <span class="stat-value"
+                              th:text="${#numbers.formatDecimal(pokemon2.height / 10.0, 1, 1) + ' m'}">0,0 m</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Peso</span>
+                        <span class="stat-value"
+                              th:text="${#numbers.formatDecimal(pokemon2.weight / 10.0, 1, 1) + ' kg'}">0,0 kg</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Experiencia</span>
+                        <span class="stat-value" th:text="${pokemon2.baseExperience}">0</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+    </section>
+
+
+    <!-- COMPARACIONES -->
+    <section class="comparisons">
+        <h2 class="section-title">Resultado de los enfrentamientos</h2>
+        <div class="comparison-list">
+            <div class="comparison">
+                <span class="comparison-label">Altura</span>
+                <span class="comparison-result"
+                      th:text="${pokemon1.height > pokemon2.height ? pokemon1.name + ' gana' : (pokemon1.height < pokemon2.height ? pokemon2.name + ' gana' : 'Empate')}">
+          Resultado de altura
+        </span>
+            </div>
+            <div class="comparison">
+                <span class="comparison-label">Peso</span>
+                <span class="comparison-result"
+                      th:text="${pokemon1.weight > pokemon2.weight ? pokemon1.name + ' gana' : (pokemon1.weight < pokemon2.weight ? pokemon2.name + ' gana' : 'Empate')}">
+          Resultado de peso
+        </span>
+            </div>
+            <div class="comparison">
+                <span class="comparison-label">Experiencia</span>
+                <span class="comparison-result"
+                      th:text="${pokemon1.baseExperience > pokemon2.baseExperience ? pokemon1.name + ' gana' : (pokemon1.baseExperience < pokemon2.baseExperience ? pokemon2.name + ' gana' : 'Empate')}">
+          Resultado de experiencia
+        </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CÁLCULOS -->
+    <section class="calculations">
+        <h2 class="section-title">Estadísticas de la batalla</h2>
+        <div class="calculation-grid">
+            <div class="calculation">
+                <span class="calculation-label">Experiencia total</span>
+                <span class="calculation-value"
+                      th:text="${pokemon1.baseExperience + pokemon2.baseExperience + ' puntos'}">0 puntos</span>
+            </div>
+            <div class="calculation">
+                <span class="calculation-label">Diferencia de peso</span>
+                <span class="calculation-value"
+                      th:text="${#numbers.formatDecimal(T(java.lang.Math).abs(pokemon1.weight - pokemon2.weight) / 10.0, 1, 1) + ' kg'}">0,0 kg</span>
+            </div>
+        </div>
+
+        <div class="scores">
+            <div class="score">
+                <span class="score-name" th:text="${pokemon1.name}">Pokémon 1</span>
+                <span class="score-value"
+                      th:text="${pokemon1.baseExperience + pokemon1.height + pokemon1.weight}">0</span>
+            </div>
+            <div class="score">
+                <span class="score-name" th:text="${pokemon2.name}">Pokémon 2</span>
+                <span class="score-value"
+                      th:text="${pokemon2.baseExperience + pokemon2.height + pokemon2.weight}">0</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- GANADOR -->
+    <section class="winner">
+        <p class="winner-label">Ganador de la batalla</p>
+        <div th:switch="${(pokemon1.baseExperience + pokemon1.height + pokemon1.weight) > (pokemon2.baseExperience + pokemon2.height + pokemon2.weight) ? 1 : ((pokemon1.baseExperience + pokemon1.height + pokemon1.weight) < (pokemon2.baseExperience + pokemon2.height + pokemon2.weight) ? -1 : 0)}">
+            <h2 th:case="1" th:if="${pokemon1 != null}"
+                th:text="${pokemon1.name + ' es el ganador de la batalla'}">Pokémon 1 es el ganador de la batalla</h2>
+            <h2 th:case="-1" th:text="${pokemon2.name + ' es el ganador de la batalla'}">Pokémon 2 es el ganador de la batalla</h2>
+            <h2 th:case="0">La batalla termina en empate</h2>
+        </div>
+        <a class="new-battle" th:href="@{/pokemon/batalla}">Nueva batalla</a>
+    </section>
+
+
+    <div th:replace="~{fragments :: footer}"></div>
+
+</main>
+
+</body>
+</html>
