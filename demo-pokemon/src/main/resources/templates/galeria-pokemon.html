@@ -9,11 +9,9 @@
   </style>
 </head>
 <body>
+<nav th:replace="~{fragments :: menu}"></nav>
 <main class="page">
-  <nav class="nav">
-	<a th:href="@{/}">Inicio</a>
-	<a th:href="@{/pokemon/tabla}">Listado</a>
-  </nav>
+
   <header class="hero">
 	<h1 th:text="${titulo}">Galería Pokémon</h1>
 	<p>Descubre una selección aleatoria de Pokémon.</p>
@@ -39,5 +37,6 @@
 	</article>
     </section>
 </main>
+<footer th:replace="~{fragments :: footer}"></footer>
 </body>
 </html>

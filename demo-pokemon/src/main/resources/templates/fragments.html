@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- saved from url=(0083)https://moodle.mariaanasanz.es/pluginfile.php/47754/mod_assign/intro/fragments.html -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>
+
+<!-- =========================================================
+     MENÚ DE NAVEGACIÓN
+     ========================================================= -->
+<nav th:fragment="menu" style="
+        background-color: #263238;
+        padding: 14px 30px;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+     ">
+
+    <a th:href="@{/}" style="
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 16px;
+       ">
+        Inicio
+    </a>
+
+    <a th:href="@{/informacion}" style="
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 16px;
+       ">
+        Información
+    </a>
+
+    <a th:href="@{/pokemon/tabla}" style="
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 16px;
+       ">
+        Lista
+    </a>
+    <a th:href="@{/pokemon/galeria}" style="
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        ">Galeria</a>
+
+</nav>
+
+
+<!-- =========================================================
+     PIE DE PÁGINA
+     ========================================================= -->
+<footer th:fragments="footer" style="
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #263238;
+            color: white;
+            text-align: center;
+            font-size: 14px;
+        ">
+
+    <p style="margin: 0;">
+        Pokédex · Desarrollo Web · 2026
+    </p>
+
+</footer>
+
+
+</body></html>

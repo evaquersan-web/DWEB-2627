@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xml:th="http://www.thymelef.org">
+<html lang="es" xml:th="http://www.thymelef.org" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,16 +9,9 @@
   </style>
 </head>
 <body>
+<nav th:replace="~{fragments :: menu}"></nav>
 <main class="page">
-  <header class="topbar">
-    <nav class="nav">
-		<a th:href="@{/}">Inicio</a>
-		<a th:href="@{/pokemon/galeria}">Galería</a>
-	</nav>
-    <span class="updated" th:text="${'actualizado el '
-    + #temporals.format(fechaHora, 'dd/MM/yyyy') +
-     ' a las ' + #temporals.format(fechaHora, 'HH:mm')}"></span>
-  </header>
+
   <section class="hero">
 	<h1 th:text="${titulo}">Pokémon en formato tabla</h1>
 	<p>Compara rápidamente sus medidas y experiencia base.</p>
@@ -57,5 +50,6 @@
     </table>
   </section>
 </main>
+<footer th:replace="~{fragments :: footer}"></footer>
 </body>
 </html>

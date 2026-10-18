@@ -7,6 +7,7 @@
 
 </head>
 <body>
+<nav th:replace="~{fragments::menu}"></nav>
     <main class="page">
         <section class="pokemon-grid">
             <h1>Pokemons</h1>
@@ -27,5 +28,6 @@
             <a th:href="@{/pokemon/tabla}">Tabla</a>
         </nav>
     </main>
+<footer th:replace="~{fragments :: footer}"></footer>
 </body>
 </html>
