@@ -11,30 +11,54 @@
 <body>
 <nav th:replace="~{fragments :: menu}"></nav>
 <main class="page">
+    <header class="hero">
+        <h1 th:text="${titulo}">Galería Pokémon</h1>
+        <p>Descubre una selección aleatoria de Pokémon.</p>
+    </header>
+    <div th:replace="~{fragments :: filtros}"></div>
+    <p class="no-results"
+       th:if="${#lists.isEmpty(pokemons)}">
+        No se han encontrado Pokémon con esos filtros. Prueba a cambiar los criterios de búsqueda.
+    </p>
 
-  <header class="hero">
-	<h1 th:text="${titulo}">Galería Pokémon</h1>
-	<p>Descubre una selección aleatoria de Pokémon.</p>
-  </header>
-  <section class="cards">
-    <article class="card" th:each="pokemon : ${pokemons}">
-		<div class="card-image">
-       <img th:src="${pokemon.imageURL}" th:alt="${#strings.capitalize(pokemon.name)}"
-     src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
-            alt="Bulbasaur"></div>
-		<div class="card-body">
-			<p class="number" th:text="'N.º '+ ${#numbers.formatInteger(pokemon.id,4)}">N.º 0001</p>
-			<h2 th:text="${#strings.capitalize(pokemon.name)}">Bulbasaur</h2>
-			<div class="measures">
-				<div class="measure"><span class="label">Altura</span>
-                    <span class="value" th:text="${#numbers.formatDecimal(pokemon.height / 10.0, 1, 1)} + ' m'">
-                        0,7 m</span></div>
-				<div class="measure"><span class="label">Peso</span><span class="value"
-                th:text="${#numbers.formatDecimal(pokemon.weight / 10.0, 1, 1)} + ' kg'">
-                    6,9 kg</span></div>
-			</div>
-		</div>
-	</article>
+    <section class="cards" th:unless="${#lists.isEmpty(pokemons)}">
+        <article class="card" th:each="pokemon : ${pokemons}">
+            <div class="card-image">
+                <img th:src="${pokemon.imageURL}"
+                     th:alt="${#strings.capitalize(pokemon.name)}"
+                     src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
+                     alt="Bulbasaur">
+            </div>
+            <div class="card-body">
+                <p class="number"
+                   th:text="'N.º ' + ${#numbers.formatInteger(pokemon.id,4)}">
+                    N.º 0001
+                </p>
+                <h2 th:text="${#strings.capitalize(pokemon.name)}">
+                    Bulbasaur
+                </h2>
+                <div class="measures">
+                    <div class="measure">
+                        <span class="label">Altura</span>
+                        <span class="value"
+                              th:text="${#numbers.formatDecimal(pokemon.height / 10.0, 1, 1)} + ' m'">
+              0,7 m
+            </span>
+                    </div>
+                    <div class="measure">
+                        <span class="label">Peso</span>
+                        <span class="value"
+                              th:text="${#numbers.formatDecimal(pokemon.weight / 10.0, 1, 1)} + ' kg'">
+              6,9 kg
+            </span>
+                    </div>
+                </div>
+                <a class="detail-link"
+                   th:href="@{/pokemon/{id}(id=${pokemon.id})}">
+                    Ver detalle
+                </a>
+            </div>
+        </article>
     </section>
 </main>
 <footer th:replace="~{fragments :: footer}"></footer>

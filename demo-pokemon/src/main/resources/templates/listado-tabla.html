@@ -11,45 +11,68 @@
 <body>
 <nav th:replace="~{fragments :: menu}"></nav>
 <main class="page">
+    <section class="hero">
+        <h1 th:text="${titulo}">Pokémon en formato tabla</h1>
+        <p>Compara rápidamente sus medidas y experiencia base.</p>
+    </section>
 
-  <section class="hero">
-	<h1 th:text="${titulo}">Pokémon en formato tabla</h1>
-	<p>Compara rápidamente sus medidas y experiencia base.</p>
-</section>
-  <section class="table-card">
-    <table>
-      <thead><tr>
-		<th>Posición</th>
-		<th>N.º Pokédex</th>
-		<th>Nombre</th>
-		<th>Altura</th>
-		<th>Peso</th>
-		<th>Experiencia</th>
-	  </tr></thead>
-      <tbody>
-	  <tr th:each="pokemon, iterStat : ${pokemons}">
-		  <td class="position" th:text="${iterStat.count}">1</td>
-		  <td th:text="${#numbers.formatInteger(pokemon.id, 4)}">
-			  0001
-		  </td>
-		  <td class="pokemon-name"
-			  th:text="${#strings.capitalize(pokemon.name)}">
-			  Bulbasaur
-		  </td>
-		  <td th:text="${#numbers.formatDecimal(pokemon.height / 10.0, 1, 1)} + ' m'">
-			  0,7 m
-		  </td>
-		  <td th:text="${#numbers.formatDecimal(pokemon.weight / 10.0, 1, 1)} + ' kg'">
-			  6,9 kg
-		  </td>
-		  <td th:text="${pokemon.baseExperience} + ' puntos'">
-			  64 puntos
-		  </td>
-	  </tr>
-      </tbody>
-    </table>
-  </section>
+    <div th:replace="~{fragments :: filtros}"></div>
+
+    <p class="no-results"
+       th:if="${#lists.isEmpty(pokemons)}">
+        No se han encontrado Pokémon con esos filtros. Prueba a cambiar los criterios de búsqueda.
+    </p>
+
+    <section class="table-card" th:unless="${#lists.isEmpty(pokemons)}">
+        <table>
+            <thead>
+            <tr>
+                <th>Posición</th>
+                <th>N.º Pokédex</th>
+                <th>Nombre</th>
+                <th>Altura</th>
+                <th>Peso</th>
+                <th>Experiencia</th>
+                <th>Detalle</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="pokemon, iterStat : ${pokemons}">
+                <td class="position" th:text="${iterStat.count}">1</td>
+
+                <td th:text="${#numbers.formatInteger(pokemon.id, 4)}">
+                    0001
+                </td>
+
+                <td class="pokemon-name"
+                    th:text="${#strings.capitalize(pokemon.name)}">
+                    Bulbasaur
+                </td>
+
+                <td th:text="${#numbers.formatDecimal(pokemon.height / 10.0, 1, 1)} + ' m'">
+                    0,7 m
+                </td>
+
+                <td th:text="${#numbers.formatDecimal(pokemon.weight / 10.0, 1, 1)} + ' kg'">
+                    6,9 kg
+                </td>
+
+                <td th:text="${pokemon.baseExperience} + ' puntos'">
+                    64 puntos
+                </td>
+
+                <td>
+                    <a th:href="@{/pokemon/{id}(id=${pokemon.id})}">
+                        Ver detalle
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
 </main>
 <footer th:replace="~{fragments :: footer}"></footer>
+
 </body>
 </html>

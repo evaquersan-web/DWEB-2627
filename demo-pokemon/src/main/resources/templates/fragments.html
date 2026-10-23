@@ -57,11 +57,86 @@
 
 </nav>
 
+<!-- FORMULARIO DE FILTROS COMPARTIDO -->
+<section th:fragment="filtros" style="margin:0 0 22px;padding:18px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;">
+
+    <form method="get"
+          th:action="@{${rutaFormulario}}"
+          style="display:flex;flex-wrap:wrap;gap:14px;align-items:end;">
+
+        <div>
+            <label for="tipo">Tipo</label>
+            <select id="tipo" name="tipo">
+                <option value=""
+                        th:selected="${tipoSeleccionado == null or tipoSeleccionado == ''}">
+                    Aleatorio
+                </option>
+
+                <option th:each="tipoPokemon : ${tipos}"
+                        th:value="${tipoPokemon.name}"
+                        th:text="${#strings.capitalize(tipoPokemon.name)}"
+                        th:selected="${tipoPokemon.name == tipoSeleccionado}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" name="nombre"
+                   th:value="${nombre}" placeholder="Ej. char">
+        </div>
+
+        <div>
+            <label for="alturaMin">Altura mínima (m)</label>
+            <input id="alturaMin" type="number" name="alturaMin"
+                   min="0" step="0.1" th:value="${alturaMin}">
+        </div>
+
+        <div>
+            <label for="pesoMax">Peso máximo (kg)</label>
+            <input id="pesoMax" type="number" name="pesoMax"
+                   min="0" step="0.1" th:value="${pesoMax}">
+        </div>
+
+        <div>
+            <label for="orden">Ordenar por</label>
+            <select id="orden" name="orden">
+                <option value="" th:selected="${orden == null or orden == ''}">
+                    Sin ordenar
+                </option>
+                <option value="nombre" th:selected="${orden == 'nombre'}">Nombre</option>
+                <option value="altura" th:selected="${orden == 'altura'}">Altura</option>
+                <option value="peso" th:selected="${orden == 'peso'}">Peso</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="direccion">Dirección</label>
+            <select id="direccion" name="direccion">
+                <option value="asc"
+                        th:selected="${direccion == 'asc' or direccion == null}">
+                    Ascendente
+                </option>
+                <option value="desc"
+                        th:selected="${direccion == 'desc'}">
+                    Descendente
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <button type="submit">Buscar</button>
+            <a th:href="@{${rutaFormulario}}">Limpiar filtros</a>
+        </div>
+
+    </form>
+</section>
+
 
 <!-- =========================================================
      PIE DE PÁGINA
      ========================================================= -->
-<footer th:fragments="footer" style="
+<footer th:fragment="footer" style="
             margin-top: 40px;
             padding: 20px;
             background-color: #263238;

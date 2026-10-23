@@ -41,4 +41,14 @@ public class PokemonService {
     public ArrayList<Pokemon> obtenerPokemons() {
         return findAll();
     }
+
+
+    public ArrayList<Pokemon.Type> findAllTypes() {
+        return pokemonRepository.findAllTypes();
+    }
+
+    public ArrayList<Pokemon> findByType(String typeName) {
+        return pokemonRepository.findByType(typeName, 30);
+    }
+
 }
