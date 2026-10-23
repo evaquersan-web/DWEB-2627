@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi equipo Pokémon</title>
+    <style>
+        body{margin:0;padding:25px;background:#eef6ff;color:#172033;font-family:Arial,sans-serif}main{max-width:1000px;margin:auto}.panel{background:white;padding:22px;margin:20px 0;border-radius:14px}.error{background:#fff1f2;border-left:5px solid #be123c;padding:14px;color:#9f1239;border-radius:8px}  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+        .card{background:white;border:1px solid #cbd5e1;border-radius:12px;padding:18px}
+        img{width:120px;display:block;margin:auto}
+        button,a{display:inline-block;margin:5px;padding:9px 12px;border:0;border-radius:7px;background:#0f4c81;color:white;text-decoration:none;cursor:pointer}
+        input{padding:10px;margin:8px 0}
+    </style>
+</head>
+<body>
+<nav th:replace="~{fragments :: menu}"></nav>
+
+<main>
+    <section class="panel">
+        <h1>Mi equipo Pokémon</h1>
+        <p th:if="${errorRegistro}" class="error" th:text="${errorRegistro}"></p>
+
+        <div th:if="${session.entrenador == null}">
+            <h2>Registrar entrenador</h2>
+            <form method="post" th:action="@{/pokemon/entrenador}">
+                <label for="nombre">Nombre del entrenador:</label>
+                <input id="nombre" name="nombre" type="text"
+                       placeholder="Escribe tu nombre">
+                <button type="submit">Registrarme</button>
+            </form>
+        </div>
+
+        <div th:if="${session.entrenador != null}">
+            <h2>
+                Equipo de <span th:text="${session.entrenador}">Entrenador</span>
+            </h2>
+            <p th:text="${equipo.size()} + ' / 6 Pokémon'">0 / 6 Pokémon</p>
+
+            <p th:if="${#lists.isEmpty(equipo)}">
+                Tu equipo está vacío. Ve a la tabla o a la galería para añadir Pokémon.
+            </p>
+
+            <section class="cards" th:unless="${#lists.isEmpty(equipo)}">
+                <article class="card" th:each="pokemon : ${equipo}">
+                    <img th:src="${pokemon.imageURL}"
+                         th:alt="${pokemon.name}">
+                    <h3 th:text="${#strings.capitalize(pokemon.name)}">Pokémon</h3>
+                    <p>
+                        N.º <span th:text="${#numbers.formatInteger(pokemon.id, 4)}">0001</span>
+                    </p>
+                    <p th:text="'Altura: ' + ${pokemon.height / 10.0} + ' m'"></p>
+                    <p th:text="'Peso: ' + ${pokemon.weight / 10.0} + ' kg'"></p>
+
+                    <form method="post" th:action="@{/pokemon/equipo/eliminar}">
+                        <input type="hidden" name="id" th:value="${pokemon.id}">
+                        <button type="submit">Eliminar</button>
+                    </form>
+
+                    <a th:href="@{/pokemon/equipo/combate/{id}(id=${pokemon.id})}">
+                        Combatir
+                    </a>
+                </article>
+            </section>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

@@ -1,11 +1,7 @@
 <!DOCTYPE html>
-<!-- saved from url=(0083)https://moodle.mariaanasanz.es/pluginfile.php/47754/mod_assign/intro/fragments.html -->
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>
-
-<!-- =========================================================
-     MENÚ DE NAVEGACIÓN
-     ========================================================= -->
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head>
+<body>
 <nav th:fragment="menu" style="
         background-color: #263238;
         padding: 14px 30px;
@@ -14,128 +10,60 @@
         gap: 28px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.15);
      ">
-
-    <a th:href="@{/}" style="
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-          font-size: 16px;
-       ">
-        Inicio
-    </a>
-
-    <a th:href="@{/informacion}" style="
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-          font-size: 16px;
-       ">
-        Información
-    </a>
-
-    <a th:href="@{/pokemon/tabla}" style="
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-          font-size: 16px;
-       ">
-        Lista
-    </a>
-    <a th:href="@{/pokemon/galeria}" style="
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-        ">Galeria</a>
-
-    <a th:href="@{/pokemon/batalla}" style="
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-        ">Batalla</a>
-
+    <a th:href="@{/}" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;">Inicio</a>
+    <a th:href="@{/informacion}" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;">Información</a>
+    <a th:href="@{/pokemon/tabla}" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;">Lista</a>
+    <a th:href="@{/pokemon/galeria}" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;">Galeria</a>
+    <a th:href="@{/pokemon/batalla}" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;">Batalla</a>
+    <a th:href="@{/pokemon/equipo}" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;">Equipo</a>
+    <span th:if="${session.entrenador != null}" th:text="'Entrenador: ' + ${session.entrenador}" style="color:white;font-weight:bold;"></span>
+    <form th:if="${session.entrenador != null}" th:action="@{/pokemon/logout}" method="post" style="margin:0;">
+        <button type="submit">Cerrar sesión</button>
+    </form>
 </nav>
-
-<!-- FORMULARIO DE FILTROS COMPARTIDO -->
 <section th:fragment="filtros" style="margin:0 0 22px;padding:18px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;">
-
-    <form method="get"
-          th:action="@{${rutaFormulario}}"
-          style="display:flex;flex-wrap:wrap;gap:14px;align-items:end;">
-
+    <form method="get" th:action="@{${rutaFormulario}}" style="display:flex;flex-wrap:wrap;gap:14px;align-items:end;">
         <div>
             <label for="tipo">Tipo</label>
             <select id="tipo" name="tipo">
-                <option value=""
-                        th:selected="${tipoSeleccionado == null or tipoSeleccionado == ''}">
-                    Aleatorio
-                </option>
-
-                <option th:each="tipoPokemon : ${tipos}"
-                        th:value="${tipoPokemon.name}"
-                        th:text="${#strings.capitalize(tipoPokemon.name)}"
-                        th:selected="${tipoPokemon.name == tipoSeleccionado}">
-                </option>
+                <option value="" th:selected="${tipoSeleccionado == null or tipoSeleccionado == ''}">Aleatorio</option>
+                <option th:each="tipoPokemon : ${tipos}" th:value="${tipoPokemon.name}" th:text="${#strings.capitalize(tipoPokemon.name)}" th:selected="${tipoPokemon.name == tipoSeleccionado}"></option>
             </select>
         </div>
-
         <div>
             <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" name="nombre"
-                   th:value="${nombre}" placeholder="Ej. char">
+            <input id="nombre" type="text" name="nombre" th:value="${nombre}" placeholder="Ej. char">
         </div>
-
         <div>
             <label for="alturaMin">Altura mínima (m)</label>
-            <input id="alturaMin" type="number" name="alturaMin"
-                   min="0" step="0.1" th:value="${alturaMin}">
+            <input id="alturaMin" type="number" name="alturaMin" min="0" step="0.1" th:value="${alturaMin}">
         </div>
-
         <div>
             <label for="pesoMax">Peso máximo (kg)</label>
-            <input id="pesoMax" type="number" name="pesoMax"
-                   min="0" step="0.1" th:value="${pesoMax}">
+            <input id="pesoMax" type="number" name="pesoMax" min="0" step="0.1" th:value="${pesoMax}">
         </div>
-
         <div>
             <label for="orden">Ordenar por</label>
             <select id="orden" name="orden">
-                <option value="" th:selected="${orden == null or orden == ''}">
-                    Sin ordenar
-                </option>
+                <option value="" th:selected="${orden == null or orden == ''}">Sin ordenar</option>
                 <option value="nombre" th:selected="${orden == 'nombre'}">Nombre</option>
                 <option value="altura" th:selected="${orden == 'altura'}">Altura</option>
                 <option value="peso" th:selected="${orden == 'peso'}">Peso</option>
             </select>
         </div>
-
         <div>
             <label for="direccion">Dirección</label>
             <select id="direccion" name="direccion">
-                <option value="asc"
-                        th:selected="${direccion == 'asc' or direccion == null}">
-                    Ascendente
-                </option>
-                <option value="desc"
-                        th:selected="${direccion == 'desc'}">
-                    Descendente
-                </option>
+                <option value="asc" th:selected="${direccion == 'asc' or direccion == null}">Ascendente</option>
+                <option value="desc" th:selected="${direccion == 'desc'}">Descendente</option>
             </select>
         </div>
-
         <div>
             <button type="submit">Buscar</button>
             <a th:href="@{${rutaFormulario}}">Limpiar filtros</a>
         </div>
-
     </form>
 </section>
-
-
-<!-- =========================================================
-     PIE DE PÁGINA
-     ========================================================= -->
 <footer th:fragment="footer" style="
             margin-top: 40px;
             padding: 20px;
@@ -144,12 +72,7 @@
             text-align: center;
             font-size: 14px;
         ">
-
-    <p style="margin: 0;">
-        Pokédex · Desarrollo Web · 2026
-    </p>
-
+    <p style="margin:0;">Pokédex · Desarrollo Web · 2026</p>
 </footer>
-
-
-</body></html>
+</body>
+</html>

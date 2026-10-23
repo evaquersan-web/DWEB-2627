@@ -19,6 +19,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class PokemonController {
@@ -234,4 +242,170 @@ public class PokemonController {
 
         return "batalla-pokemon";
     }
+
+    @GetMapping("/pokemon/equipo")
+    public String verEquipo(HttpSession session, Model model) {
+        String entrenador = (String) session.getAttribute("entrenador");
+
+        if (entrenador == null) {
+            return "equipo";
+        }
+
+        List<Pokemon> equipo = (List<Pokemon>) session.getAttribute("equipo");
+
+        if (equipo == null) {
+            equipo = new ArrayList<>();
+            session.setAttribute("equipo", equipo);
+        }
+
+        model.addAttribute("entrenador", entrenador);
+        model.addAttribute("equipo", equipo);
+
+        return "equipo";
+    }
+
+    @PostMapping("/pokemon/entrenador")
+    public String registrarEntrenador(
+            @RequestParam(required = false) String nombre,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        if (nombre == null || nombre.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute(
+                    "errorRegistro",
+                    "Debes introducir un nombre válido."
+            );
+            return "redirect:/pokemon/equipo";
+        }
+
+        session.setAttribute("entrenador", nombre.trim());
+        session.setAttribute("equipo", new ArrayList<Pokemon>());
+
+        return "redirect:/pokemon/equipo";
+    }
+
+    @PostMapping("/pokemon/equipo/anadir")
+    public String anadirAlEquipo(
+            @RequestParam int id,
+            @RequestParam(defaultValue = "/pokemon/tabla") String origen,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        if (session.getAttribute("entrenador") == null) {
+            redirectAttributes.addFlashAttribute(
+                    "errorEquipo",
+                    "Debes registrar un entrenador antes de añadir Pokémon."
+            );
+            return "redirect:" + rutaSegura(origen);
+        }
+
+        List<Pokemon> equipo =
+                (List<Pokemon>) session.getAttribute("equipo");
+
+        if (equipo == null) {
+            equipo = new ArrayList<>();
+            session.setAttribute("equipo", equipo);
+        }
+
+        for (Pokemon pokemon : equipo) {
+            if (pokemon.getId() == id) {
+                redirectAttributes.addFlashAttribute(
+                        "errorEquipo",
+                        "Este Pokémon ya pertenece a tu equipo."
+                );
+                return "redirect:" + rutaSegura(origen);
+            }
+        }
+
+        if (equipo.size() >= 6) {
+            redirectAttributes.addFlashAttribute(
+                    "errorEquipo",
+                    "Tu equipo ya tiene seis Pokémon. Elimina uno antes de añadir otro."
+            );
+            return "redirect:" + rutaSegura(origen);
+        }
+
+        Pokemon pokemon = pokemonService.findById(id);
+
+        if (pokemon == null) {
+            redirectAttributes.addFlashAttribute(
+                    "errorEquipo",
+                    "No se ha encontrado ese Pokémon."
+            );
+            return "redirect:" + rutaSegura(origen);
+        }
+
+        equipo.add(pokemon);
+        session.setAttribute("equipo", equipo);
+
+        return "redirect:" + rutaSegura(origen);
+    }
+
+    @PostMapping("/pokemon/equipo/eliminar")
+    public String eliminarDelEquipo(
+            @RequestParam int id,
+            HttpSession session) {
+
+        List<Pokemon> equipo =
+                (List<Pokemon>) session.getAttribute("equipo");
+
+        if (equipo != null) {
+            equipo.removeIf(pokemon -> pokemon.getId() == id);
+        }
+
+        return "redirect:/pokemon/equipo";
+    }
+
+    @GetMapping("/pokemon/equipo/combate/{id}")
+    public String combatirDesdeEquipo(
+            @PathVariable int id,
+            HttpSession session,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        List<Pokemon> equipo =
+                (List<Pokemon>) session.getAttribute("equipo");
+
+        if (equipo == null) {
+            return "redirect:/pokemon/equipo";
+        }
+
+        Pokemon pokemon1 = null;
+
+        for (Pokemon pokemon : equipo) {
+            if (pokemon.getId() == id) {
+                pokemon1 = pokemon;
+                break;
+            }
+        }
+
+        if (pokemon1 == null) {
+            redirectAttributes.addFlashAttribute(
+                    "errorRegistro",
+                    "Ese Pokémon no forma parte de tu equipo."
+            );
+            return "redirect:/pokemon/equipo";
+        }
+
+        Pokemon pokemon2 = pokemonService.findRandom();
+
+        model.addAttribute("pokemon1", pokemon1);
+        model.addAttribute("pokemon2", pokemon2);
+
+        return "batalla-pokemon";
+    }
+
+    @PostMapping("/pokemon/logout")
+    public String cerrarSesion(HttpSession session) {
+        session.invalidate();
+        return "redirect:/pokemon/equipo";
+    }
+
+    private String rutaSegura(String origen) {
+        if ("/pokemon/galeria".equals(origen)) {
+            return "/pokemon/galeria";
+        }
+        return "/pokemon/tabla";
+    }
+
 }
